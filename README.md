@@ -25,7 +25,7 @@ $ ./tomatto.sh
 
 4. OPTIONAL: Create an alias
 ```
-alias tomatto = <path_of_script>\tomatto.sh
+alias tomatto = <path_of_script>/tomatto.sh
 ```
 
 NOTE: You can cancel the timer any time using Ctrl+C.
