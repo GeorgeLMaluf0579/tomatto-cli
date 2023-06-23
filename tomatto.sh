@@ -2,7 +2,7 @@
 
 # Avoid show percentage signal on end of line if running on zsh
 export PROMPT_EOL_MARK=""
-
+OS="`uname`"
 BAR='█████████████████████████'
 SPC='░░░░░░░░░░░░░░░░░░░░░░░░░'
 
@@ -18,8 +18,17 @@ RESTCOLOR='\033[0;34m'
 let END=$FOCUSTIME*60
 let REND=$RESTTIME*60
 
-notify-send "Pomodoro" "🍅 It's time to get focus"
-play focustime.mp3 -q
+case $OS in
+  'Darwin')
+    terminal-notifier -title 'Pomodoro' -message "🍅 It's time to get focus"
+    afplay focustime.mp3 
+    ;;
+  *)
+    notify-send "Pomodoro" "🍅 It's time to get focus"
+    play focustime.mp3 -q
+    ;;
+esac
+
 for((c=$START; c<$END; c++)); do
   let per=$c*100/$END
   let prg=$c*25/$END
@@ -31,10 +40,19 @@ for((c=$START; c<$END; c++)); do
 done
 printf "              \n"
 echo -ne "\r${FOCUSCOLOR}$BAR 100%"
-printf "${RESET}\r\033[A              \r"
+printf "${RESET}\r\033[A               \r"
 
-notify-send "Pomodoro" "Times up. Take a break ☕"
-play resttime.mp3 -q
+case $OS in
+  'Darwin')
+    terminal-notifier -title 'Pomodoro' -message 'Times up. Take a break ☕'
+    afplay resttime.mp3
+    ;;
+  *)
+    notify-send "Pomodoro" "Times up. Take a break ☕"
+    play resttime.mp3 -q
+    ;;
+esac
+
 for((c=$START; c<$REND; c++)); do
   let pgr=$c*25/$REND
   let per=$c*100/$REND
@@ -47,3 +65,12 @@ done
 printf "End cicle      \n"
 echo -ne "\r${RESTCOLOR}$BAR 100%"
 echo -e "${RESET}"
+
+case $OS in
+  'Darwin')
+    afplay end.mp3
+    ;;
+  *)
+    play end.mp3 -q
+    ;;
+esac
